@@ -1,0 +1,39 @@
+
+@import "tailwindcss";
+
+@theme {
+  /* Colores */
+  --color-primary: #41815b;
+  --color-accent: #8b5b78;
+  --color-background: #f7fafc;
+  --color-surface: #ffffff;
+
+  --color-neutral-0: #ffffff;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-600: #616161;
+  --color-neutral-900: #1f1f1f;
+
+  /* Radios */
+  --radius-full: 999px;
+  --radius-large: 20px;
+  --radius-medium: 12px;
+  --radius-small: 8px;
+
+  /* Tipografía */
+  --font-primary: "Noto Serif", serif;
+
+  /* Tamaños */
+  --text-display-large: 36px;
+  --text-heading-section: 24px;
+  --text-heading-card: 20px;
+  --text-body-large: 18px;
+  --text-body: 16px;
+  --text-label-large: 14px;
+  --text-caption-regular: 12px;
+}
+
+:root {
+  --font-country-name: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  --font-page-title: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+}
