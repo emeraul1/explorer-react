@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { JSX } from "react";
 import type { Country } from "./types/country";
 
@@ -11,65 +11,24 @@ import { Footer } from "./components/organisms/Footer";
 import { SearchBar } from "./components/molecules/SearchBar";
 import { RegionFilter } from "./components/molecules/RegionFilter";
 
-import { fetchCountries } from "./api/countries";
-import { filterCountries } from "./utils/filterCountries";
+import { useCountries } from "./hooks/useCountries";
+import { useSearch } from "./hooks/useSearch";
 
 export default function App(): JSX.Element {
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [retryCount, setRetryCount] = useState<number>(0);
+  const { countries, loading, error, retry } = useCountries();
 
-  const [query, setQuery] = useState<string>("");
-  const [region, setRegion] = useState<string>("");
-  const [selectedCountry, setSelectedCountry] =
-    useState<Country | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadCountries(): Promise<void> {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const data = await fetchCountries(controller.signal);
-
-        if (!controller.signal.aborted) {
-          setCountries(data);
-        }
-      } catch (cause: unknown) {
-        if (!controller.signal.aborted) {
-          const message =
-            cause instanceof Error
-              ? cause.message
-              : "Ocurrió un error desconocido.";
-
-          setError(message);
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    void loadCountries();
-
-    return () => {
-      controller.abort();
-    };
-  }, [retryCount]);
-
-  const regions = Array.from(
-    new Set(countries.map((country) => country.region)),
-  );
-
-  const filteredCountries = filterCountries(
-    countries,
+  const {
     query,
     region,
-  );
+    regions,
+    filteredCountries,
+    setQuery,
+    setRegion,
+    clearFilters,
+  } = useSearch(countries);
+
+  const [selectedCountry, setSelectedCountry] =
+    useState<Country | null>(null);
 
   function handleSelectCountry(code: string): void {
     const country = countries.find(
@@ -79,15 +38,6 @@ export default function App(): JSX.Element {
     if (country) {
       setSelectedCountry(country);
     }
-  }
-
-  function clearFilters(): void {
-    setQuery("");
-    setRegion("");
-  }
-
-  function handleRetry(): void {
-    setRetryCount((previous) => previous + 1);
   }
 
   return (
@@ -136,7 +86,7 @@ export default function App(): JSX.Element {
 
                   <button
                     type="button"
-                    onClick={handleRetry}
+                    onClick={retry}
                     className="mt-5 rounded-full bg-accent px-6 py-3 font-bold text-white"
                   >
                     Reintentar
