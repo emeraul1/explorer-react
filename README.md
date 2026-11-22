@@ -1,115 +1,183 @@
 # Explorer App
 
-Aplicación web desarrollada con **React, TypeScript, Vite y Tailwind CSS**, que permite explorar diferentes países y consultar información relevante de cada uno.
+Aplicación web desarrollada con React, TypeScript, Vite y Tailwind CSS v4. Permite explorar países, buscarlos por nombre, filtrarlos por continente y consultar información detallada mediante rutas dinámicas.
+
+**Aplicación publicada:** [Explorer App en Vercel](https://explorer-react-one.vercel.app)
 
 ## Características
 
-- Visualización de países mediante tarjetas.
-- Búsqueda de países por nombre.
-- Filtrado de países por región.
-- Búsqueda y filtrado simultáneos.
-- Visualización de información detallada de cada país.
-- Diseño adaptable a dispositivos de escritorio y móviles.
-- Menú de navegación para dispositivos móviles.
-- Componentes reutilizables y organizados.
+- Carga asíncrona de países desde REST Countries.
+- Estados de carga, error, reintento y resultados vacíos.
+- Búsqueda por nombre de país.
+- Filtro por continente con etiquetas en español.
+- Contador de países encontrados.
+- Tarjetas con bandera, población, región y capital.
+- Mensaje alternativo cuando una bandera o un detalle no está disponible.
+- Página de detalle con capital, población, región, subregión, monedas, idiomas, dominio y fronteras.
+- Navegación entre países fronterizos.
+- Rutas con React Router:
+  - `/` — listado de países.
+  - `/country/:code` — detalle de un país.
+  - Ruta no encontrada.
+- Diseño adaptable para móvil y escritorio.
 
-## Tecnologías utilizadas
+## Tecnologías
 
-- **React:** biblioteca para construir interfaces de usuario.
-- **TypeScript:** lenguaje que permite trabajar con tipado estático.
-- **Vite:** herramienta para desarrollo y compilación.
-- **Tailwind CSS:** framework para los estilos y diseño adaptable.
-- **JavaScript:** lógica de la aplicación.
+- React
+- TypeScript
+- Vite
+- Tailwind CSS v4
+- React Router v6
+- REST Countries API
+- Vercel Functions
+- Vercel
+- pnpm
+
+## Requisitos
+
+- Node.js 22 o superior.
+- pnpm.
+- Variable `REST_COUNTRIES_API_KEY` configurada en Vercel.
+
+## Instalación y ejecución
+
+```bash
+git clone https://github.com/emeraul1/explorer-react.git
+cd explorer-react
+pnpm install
+```
+
+Para ejecutar el proyecto localmente con la función de API:
+
+```bash
+pnpm dlx vercel dev
+```
+
+Abre la dirección indicada por Vercel, normalmente:
+
+```text
+http://localhost:3000
+```
+
+> La clave de REST Countries se configura como variable de entorno en Vercel. No debe agregarse al repositorio.
+
+## Comandos
+
+```bash
+pnpm build
+```
+
+Genera la compilación de producción.
+
+```bash
+pnpm lint
+```
+
+Analiza el código y detecta problemas de calidad.
+
+```bash
+pnpm dlx vercel --prod
+```
+
+Publica una versión de producción en Vercel.
 
 ## Estructura del proyecto
 
 ```text
 explorer-react/
+├── api/
+│   └── countries.ts
 ├── public/
+│   └── capturas/
+│       ├── detail.png
+│       └── home.png
 ├── src/
+│   ├── api/
+│   │   └── countries.ts
 │   ├── components/
 │   │   ├── atoms/
 │   │   ├── molecules/
 │   │   └── organisms/
 │   ├── data/
+│   │   └── country-codes.ts
+│   ├── hooks/
+│   │   ├── useCountries.ts
+│   │   ├── useCountryDetail.ts
+│   │   └── useSearch.ts
+│   ├── pages/
+│   │   ├── HomePage.tsx
+│   │   ├── CountryDetailPage.tsx
+│   │   └── NotFoundPage.tsx
 │   ├── types/
 │   ├── utils/
 │   ├── App.tsx
-│   ├── App.css
-│   └── index.css
-├── .gitignore
-├── index.html
+│   └── main.tsx
 ├── package.json
-├── tsconfig.json
 └── vite.config.ts
 ```
 
-## Instalación y ejecución
+## Organización del código
 
-Para ejecutar el proyecto localmente, sigue estos pasos:
+- **Atoms:** elementos pequeños como `Flag` y `Badge`.
+- **Molecules:** componentes como `CountryCard`, `SearchBar` y `RegionFilter`.
+- **Organisms:** componentes más completos como `CountryGrid`, `CountryDetail` y `SiteHeader`.
+- **Custom Hooks:**
+  - `useCountries()` obtiene el listado y controla carga, error y reintento.
+  - `useSearch()` administra búsqueda, región y resultados filtrados.
+  - `useCountryDetail()` obtiene el país según el código de la URL.
+- **Pages:** representan las vistas principales de la aplicación.
+- **API:** la función de Vercel protege la clave de REST Countries.
 
-### 1. Clonar el repositorio
+## Migración de Vanilla TypeScript a React
 
-```bash
-git clone https://github.com/emeraul1/explorer-react.git
-```
+La versión Vanilla utilizaba manipulación directa del DOM, eventos manuales y hash routing. En esta versión:
 
-### 2. Ingresar a la carpeta del proyecto
+- La interfaz se organizó en componentes reutilizables con props tipadas.
+- El estado se administra con `useState`.
+- La carga asíncrona usa `useEffect` y `AbortController`.
+- La lógica se separó en custom hooks.
+- La navegación se implementó con React Router y rutas dinámicas.
+- La vista de detalle se obtiene mediante el parámetro `:code`.
 
-```bash
-cd explorer-react
-```
+Se reutilizaron los tipos de país y las utilidades de filtrado y formato. La lógica de consulta y navegación se adaptó a la arquitectura de React.
 
-### 3. Instalar las dependencias
+## Verificación
 
-```bash
-npm install
-```
-
-### 4. Ejecutar el servidor de desarrollo
-
-```bash
-npm run dev
-```
-
-### 5. Abrir la aplicación
-
-Vite mostrará una dirección local en la terminal, normalmente:
-
-
-http://localhost:5173/
-
-
-## Compilación para producción
-
-Para generar la versión de producción:
+Antes de publicar se ejecutaron los siguientes comandos:
 
 ```bash
-npm run build
+pnpm build
+pnpm lint
 ```
 
-Para visualizar la compilación localmente:
+La compilación se completó correctamente y el análisis no presentó errores ni advertencias.
 
-```bash
-npm run preview
-```
+## Capturas
 
-## Organización de componentes
+### Listado de países
 
-El proyecto utiliza una arquitectura basada en componentes reutilizables:
+![Listado de países](./public/capturas/home.png)
 
-- **Atoms:** componentes pequeños, como insignias y banderas.
-- **Molecules:** componentes que agrupan elementos, como tarjetas de países y barra de búsqueda.
-- **Organisms:** componentes más completos, como encabezados, cuadrículas y detalles de países.
+### Detalle de un país
 
-El estado principal se administra en `App.tsx` mediante el hook `useState` de React y se comparte con los componentes hijos mediante props y funciones callback.
+![Detalle de un país](./public/capturas/detail.png)
+
+## Medición inicial con Lighthouse
+
+- **URL analizada:** https://explorer-react-one.vercel.app
+- **Fecha:** 22 de noviembre de 2026.
+- **Modo:** Mobile.
+
+| Categoría | Puntaje |
+|---|---:|
+| Performance | 97 |
+| Accessibility | 100 |
+| Best Practices | 100 |
+
+![Resultado de Lighthouse en móvil](./public/capturas/lighthouse-mobile.png)
 
 ## Autor
 
-** Emerson Raul Ventura Castillo**
+Emerson Raúl Ventura Castillo
 
-Proyecto académico de diseño y desarrollo de interfaces web adaptables.
-
-## Licencia
-
-Proyecto desarrollado con fines educativos.
+Proyecto académico de Diseño Web Adaptable.
