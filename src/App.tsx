@@ -1,6 +1,5 @@
 import type { JSX } from "react";
 import {
-  Navigate,
   Route,
   Routes,
 } from "react-router-dom";
@@ -9,6 +8,7 @@ import { SiteHeader } from "./components/organisms/SiteHeader";
 import { Footer } from "./components/organisms/Footer";
 import { HomePage } from "./pages/HomePage";
 import { CountryDetailPage } from "./pages/CountryDetailPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 export default function App(): JSX.Element {
   return (
@@ -23,7 +23,7 @@ export default function App(): JSX.Element {
           element={<CountryDetailPage />}
         />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       <Footer />

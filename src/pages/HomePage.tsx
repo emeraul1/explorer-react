@@ -95,6 +95,15 @@ export function HomePage(): JSX.Element {
               Limpiar filtros
             </button>
 
+            <p
+              className="mb-6 text-sm text-neutral-600"
+              aria-live="polite"
+            >
+              {filteredCountries.length === 1
+                ? "1 país encontrado"
+                : `${filteredCountries.length} países encontrados`}
+            </p>
+
             {filteredCountries.length > 0 ? (
               <CountryGrid
                 countries={filteredCountries}
