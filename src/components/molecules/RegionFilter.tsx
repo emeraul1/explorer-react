@@ -1,4 +1,4 @@
-import type { JSX, ChangeEvent } from 'react';
+import type { JSX, ChangeEvent } from "react";
 
 interface RegionFilterProps {
   region: string;
@@ -6,14 +6,25 @@ interface RegionFilterProps {
   onRegionChange: (value: string) => void;
 }
 
+const regionLabels: Record<string, string> = {
+  Africa: "África",
+  Americas: "América",
+  Asia: "Asia",
+  Europe: "Europa",
+  Oceania: "Oceanía",
+  Antarctic: "Antártida",
+};
+
 export function RegionFilter({
   region,
   regions,
   onRegionChange,
 }: RegionFilterProps): JSX.Element {
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+  function handleChange(
+    event: ChangeEvent<HTMLSelectElement>,
+  ): void {
     onRegionChange(event.target.value);
-  };
+  }
 
   return (
     <div className="w-full">
@@ -27,7 +38,7 @@ export function RegionFilter({
 
         {regions.map((item) => (
           <option key={item} value={item}>
-            {item}
+            {regionLabels[item] ?? item}
           </option>
         ))}
       </select>
