@@ -14,6 +14,9 @@ export function CountryCard({
   onSelect,
 }: CountryCardProps): JSX.Element {
   const capital = getCapital(country);
+  const hasDetail = /^[A-Z]{2}$/.test(
+    country.codes.alpha_2.trim(),
+  );
 
   return (
    <article className="overflow-hidden rounded-2xl border border-black bg-white shadow-md transition-shadow hover:shadow-xl">
@@ -38,6 +41,7 @@ export function CountryCard({
           <strong>Capital:</strong> {capital}
         </p>
 
+        {hasDetail ? (
         <button
           type="button"
           onClick={() => onSelect(country.codes.alpha_2)}
@@ -45,6 +49,11 @@ export function CountryCard({
         >
           Ver más
         </button>
+      ) : (
+        <p className="mt-7 rounded-xl bg-neutral-100 px-4 py-3 text-sm text-neutral-600">
+          Detalles no disponibles para este país.
+        </p>
+      )}
       </div>
     </article>
   );
