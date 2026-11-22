@@ -1,4 +1,17 @@
-export default async function handler(req: any, res: any) {
+interface ApiRequest {
+  method?: string;
+  url?: string;
+}
+
+interface ApiResponse {
+  status: (statusCode: number) => ApiResponse;
+  json: (body: unknown) => ApiResponse;
+}
+
+export default async function handler(
+  req: ApiRequest,
+  res: ApiResponse,
+): Promise<ApiResponse> {
   if (req.method !== "GET") {
     return res.status(405).json({
       error: "Método no permitido",
@@ -18,7 +31,10 @@ export default async function handler(req: any, res: any) {
       "https://api.restcountries.com/countries/v5",
     );
 
-    const query = new URL(req.url, "http://localhost");
+    const query = new URL(
+      req.url ?? "/api/countries",
+      "http://localhost",
+    );
 
     query.searchParams.forEach((value, key) => {
       url.searchParams.set(key, value);
@@ -30,10 +46,10 @@ export default async function handler(req: any, res: any) {
       },
     });
 
-    const data = await response.json();
+    const data: unknown = await response.json();
 
     return res.status(response.status).json(data);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error consultando REST Countries:", error);
 
     return res.status(500).json({
